@@ -21,11 +21,11 @@ Public Fact          As Factory2D
 Public Selection     As Selection
 
 Function Col(idx As Integer) As Variant
-  Col=Array( -190, -170, -145, -45, -25, -20)(idx-1)
+  Col=Array( -180, -170, -160, -139, -129, -112, -98, -90, -82, -78, -76, -70, -64, -58, -43)(idx-1)
 End Function
 
 Function Row(idx As Integer) As Variant
-  Row=Array( 4, 17, 30, 45, 60)(idx-1)  
+  Row=Array( 7, 14, 21, 28, 35, 42, 45, 49, 56)(idx-1)  
 End Function
 
 Function GetRulerLength() as Double
