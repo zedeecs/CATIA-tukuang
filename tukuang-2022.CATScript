@@ -5,7 +5,7 @@
 '
 ' Assumptions:   A Drafting document should be active
 '
-' Author:        GDG\DU\PYW
+' Author:        GDG\DU\PYW\HYL
 ' Languages:     VBScript
 ' Version:       V5R18
 ' Reg. Settings: English (United States)
@@ -239,7 +239,7 @@ Sub CATDrw_Update( targetSheet as CATIABase )
   If Not CATInit(targetSheet) Then Exit Sub  
   If CATCheckRef(0) Then Exit Sub
   CATDeleteTitleBlockStandard
-  CATCreateTitleBlockStandard
+  ' CATCreateTitleBlockStandard
   CATLinks
   CATColorGeometry 
   CATExit targetSheet
@@ -328,9 +328,9 @@ End Sub
 Sub CATCreateReference()
   '-------------------------------------------------------------------------------
   'How to create a reference text
-  ' 在图纸的右下角创建一个参照文字，标记创建的属性以帮助宏识别
+  ' 在图纸的右下角创建一个空文字，标记创建的属性以帮助宏识别
   '-------------------------------------------------------------------------------
-  Set Text = Texts.Add("Reference_", GetWidth() - 25, 5)
+  Set Text = Texts.Add("", GetWidth() - 25, 5)
   ' Set Text = Texts.Add("", GetWidth() - GetOffset(1), GetOffset(1))
   Text.Name = "Reference_" + GetMacroID
 End Sub
@@ -640,7 +640,7 @@ Sub CATTitleBlockText()
   
   Text_01 = "标记"
   Text_02 = "处数"
-  Text_03 = "更 改 文 件 号"
+  Text_03 = "更改文件号"
   Text_04 = "签  名"
   Text_05 = "日 期"
   Text_06 = "材料"
@@ -652,7 +652,7 @@ Sub CATTitleBlockText()
   Text_12 = "件数"
   Text_13 = "所属装配图号"
   Text_14 = "审核"
-  ' Text_15 = "标准化"
+  Text_15 = "标准化"
   Text_16 = "比例"
   Text_17 = "阶段标记"
   Text_18 = "名称"
@@ -664,8 +664,8 @@ Sub CATTitleBlockText()
   Text_25 = "表面加工"
   Text_26 = "热处理"
   Text_27 = "表面处理"
-  Text_15 = CATIA.SystemService.Environ("LOGNAME")
-  If Text_15 = "" Then Text_15 = CATIA.SystemService.Environ("USERNAME")
+  ' Text_15 = CATIA.SystemService.Environ("LOGNAME")
+  ' If Text_15 = "" Then Text_15 = CATIA.SystemService.Environ("USERNAME")
   
   CreateTextAF Text_01,GetOH() + Col(1) + 5.  ,GetOV() + Row(5) + 3.5  ,"TitleBlock_Text_Mark" , catMiddleCenter   ,3
   CreateTextAF Text_02,GetOH() + Col(2) + 5.  ,GetOV() + Row(5) + 3.5  ,"TitleBlock_Text_MarkNum" , catMiddleCenter   ,3
@@ -673,11 +673,12 @@ Sub CATTitleBlockText()
   CreateTextAF Text_04,GetOH() + Col(5) + 8.5 ,GetOV() + Row(5) + 3.5  ,"TitleBlock_Text_Sign" , catMiddleCenter   ,3
   CreateTextAF Text_05,GetOH() + Col(6) + 7.  ,GetOV() + Row(5) + 3.5  ,"TitleBlock_Text_Date" , catMiddleCenter   ,3
 
-  CreateTextAF Text_11,GetOH() + Col(7) + 4.  ,GetOV() + Row(4)  ,"TitleBlock_Text_Weight" , catMiddleCenter   ,3
+  CreateTextAF Text_11,GetOH() + Col(7) + 4.  ,GetOV() + Row(4)  ,"TitleBlock_Text_Weight" , catMiddleCenter   ,3  '重量
+  CreateTextAF Text_12,GetOH() + Col(10) + 4.  ,GetOV() + Row(4)  ,"TitleBlock_Text_Weight" , catMiddleCenter   ,3  '件数
   CreateTextAF Text_09,GetOH() + Col(1) + 5.  ,GetOV() + Row(4) + 3.5  ,"TitleBlock_Text_Designer" , catMiddleCenter   ,3
   CreateTextAF Text_10,GetOH() + Col(1) + 5.  ,GetOV() + Row(3) + 3.5  ,"TitleBlock_Text_Designer_1" , catMiddleCenter   ,3 '校对
   CreateTextAF Text_15,GetOH() + Col(4) + 5.  ,GetOV() + Row(2) + 3.5  ,"TitleBlock_Text_ISO" , catMiddleCenter   ,3
-  CreateTextAF Text_16,GetOH() + Col(7) + 4.  ,GetOV() + Row(2) + 3.5  ,"TitleBlock_Text_Scal" , catMiddleCenter   ,3  '比例
+  CreateTextAF Text_16,GetOH() + Col(7) + 4.  ,GetOV() + Row(2) + 3.5  ,"TitleBlock_Text_Scale" , catMiddleCenter   ,3  '比例
   CreateTextAF Text_14,GetOH() + Col(1) + 5.  ,GetOV() + Row(1) + 3.5  ,"TitleBlock_Text_Audit" , catMiddleCenter   ,3  '审核
   CreateTextAF Text_17,GetOH() + Col(7) + 8.  ,GetOV() + Row(1) + 3.5  ,"TitleBlock_Text_Audit" , catMiddleCenter   ,3  '阶段标记
   CreateTextAF Text_19,GetOH() + Col(1) + 5.  ,GetOV() + 3.5  ,"TitleBlock_Text_Craft" , catMiddleCenter   ,3  '工艺
@@ -688,18 +689,19 @@ Sub CATTitleBlockText()
   CreateTextAF Text_13,GetOH() + Col(14) + 7.5  ,GetOV()+ Row(4)  ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '装配名称
   CreateTextAF Text_08,GetOH() + Col(14) + 7.5  ,GetOV()+ Row(5) + 3.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '型号
   CreateTextAF Text_07,GetOH() + Col(14) + 7.5  ,GetOV()+ Row(7) + 5.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '单位
-
+  
   CreateTextAF Text_24,GetOH() + Col(17) + 7.5  ,GetHeight() - GetOffset(0) + Row(11) + 3.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '密级
   CreateTextAF Text_25,GetOH() + Col(17) + 7.5  ,GetHeight() - GetOffset(0) + Row(12) + 3.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '表面加工
   CreateTextAF Text_26,GetOH() + Col(17) + 7.5  ,GetHeight() - GetOffset(0) + Row(13) + 3.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '热处理
   CreateTextAF Text_27,GetOH() + Col(17) + 7.5  ,GetHeight() - GetOffset(0) + Row(14) + 3.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '表面处理
   
   CreateTextAF Text_23,GetOffset(1) + Col(20) + .5*(Col(21) - Col(20))  ,GetHeight() - GetOffset(0) - 6.5 ,"TitleBlock_Text_Num" , catMiddleCenter   ,3  '图号
-
-
-  CreateTextAF Text_02,GetOH() + Col(17) + 7.5       ,GetOV() + Row(2)     ,"TitleBlock_Text_Scale"  , catTopLeft     ,1.5
+  
+  
+  ' CreateTextAF Text_02,GetOH() + Col(8) + 16.  ,GetOV() + Row(2) + 3.5  ,"TitleBlock_Text_Scale"  , catMiddleCenter   ,3  '比例
+  
   ' Insert Text Attribute link on sheet's scale
-  Set Text= CreateTextAF("", GetOH()+.5*(Col(1)+Col(2))-4, GetOV() + Row(1) ,"TitleBlock_Text_Scale_1", catBottomCenter,5)
+  Set Text= CreateTextAF("", GetOH() + Col(8) + 15.  ,GetOV() + Row(2) + 3.5 ,"TitleBlock_Text_Scale_1", catMiddleCenter,3)  '比例
 
   Select Case GetContext():
     Case "LAY": Text.InsertVariable 0, 0, ActiveDoc.Part.GetItem("CATLayoutRoot").Parameters.Item(ActiveDoc.Part.GetItem("CATLayoutRoot").Name+"\"+Sheet.Name+"\ViewMakeUp2DL.1\Scale")
@@ -707,13 +709,14 @@ Sub CATTitleBlockText()
     Case Else:Text.Text = "XX"
   End Select
   
-  CreateTextAF Text_04,GetOH() + Col(2) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Weight"      ,catTopLeft     ,1.5
-  CreateTextAF Text_05,GetOH() + .5*(Col(2)+Col(3)),GetOV() + Row(1)            ,"TitleBlock_Text_Weight_1"    ,catBottomCenter,5
-  CreateTextAF Text_06,GetOH() + Col(3) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Number"      ,catTopLeft     ,1.5
-  CreateTextAF Text_05,GetOH() + .5*(Col(3)+Col(4)),GetOV() + Row(1)            ,"TitleBlock_Text_EnoviaV5_Effectivity"    ,catBottomCenter,4
-  CreateTextAF Text_07,GetOH() + Col(4) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Sheet"       ,catTopLeft     ,1.5
-  CreateTextAF Text_05,GetOH() + .5*(Col(4)+Col(5)),GetOV() + Row(1)            ,"TitleBlock_Text_Sheet_1"     ,catBottomCenter,5
-  CreateTextAF Text_08,GetOH() + Col(1) + 1.       ,GetOV() + Row(3)            ,"TitleBlock_Text_Size"        ,catTopLeft     ,1.5
+  CreateTextAF Text_05,GetOH() - 21.5 ,GetOV() + 3.5  ,"TitleBlock_Text_EnoviaV5_Effectivity"    ,catMiddleCenter,3
+  CreateTextAF Text_05,GetOffset(1) + 22 ,GetHeight() - GetOffset(0) - 6.5 ,"TitleBlock_Text_EnoviaV5_Effectivity_1"    ,catMiddleCenter,3
+  ' CreateTextAF Text_04,GetOH() + Col(2) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Weight"      ,catTopLeft     ,1.5
+  CreateTextAF Text_05,GetOH() + Col(8) + 6.  ,GetOV() + Row(4)  ,"TitleBlock_Text_Weight_1"    ,catMiddleCenter,3
+  ' CreateTextAF Text_06,GetOH() + Col(3) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Number"      ,catTopLeft     ,1.5
+  ' CreateTextAF Text_07,GetOH() + Col(4) + 1.       ,GetOV() + Row(2)            ,"TitleBlock_Text_Sheet"       ,catTopLeft     ,1.5
+  CreateTextAF Text_05,GetOH() + Col(7) + 20.  ,GetOV() + 3.5,"TitleBlock_Text_Sheet_1"     ,catMiddleCenter,3
+  ' CreateTextAF Text_08,GetOH() + Col(1) + 1.       ,GetOV() + Row(3)            ,"TitleBlock_Text_Size"        ,catTopLeft     ,1.5
   If (Sheet.PaperSize  = 13) Then
     CreateTextAF Text_09, GetOH() + .5*(Col(1)+Col(2)), GetOV() + Row(2) + 2    ,"TitleBlock_Text_Size_1"      ,catBottomCenter, 5
   Else
@@ -729,11 +732,13 @@ Sub CATTitleBlockText()
   ' CreateTextAF Text_13,GetOH() + Col(1) + 1.       ,GetOV() + .5*(Row(4)+Row(5)),"TitleBlock_Text_DDate"       ,catTopLeft     ,1.5
   ' CreateTextAF ""&Date,GetOH() + Col(2) + 2.5      ,GetOV() + Row(4)            ,"TitleBlock_Text_DDate_1"     ,catBottomCenter,3
   ' CreateTextAF Text_05,GetOH() + .5*(Col(3)+Col(5)),GetOV() + Row(4)            ,"TitleBlock_Text_Title_1"     ,catMiddleCenter,7
-  For ii = 1 To GetNbOfRevision()
-    iY=GetOV() + (ii-.5) * Row(5)/GetNbOfRevision()
-    CreateTextAF GetRevLetter(ii),GetOH() + .5*(Col(5)+Col(6)),iY,"TitleBlock_Text_Modif_" + GetRevLetter(ii),catMiddleCenter,2.5
-    CreateTextAF "_"             ,GetOH() + .5*Col(6)         ,iY,"TitleBlock_Text_MDate_" + GetRevLetter(ii),catMiddleCenter,2.
-  Next
+
+' 更改标记
+  ' For ii = 1 To GetNbOfRevision()
+  '   iY=GetOV() + (ii-.5) * Row(5)/GetNbOfRevision()
+  '   CreateTextAF GetRevLetter(ii),GetOH() + .5*(Col(5)+Col(6)),iY,"TitleBlock_Text_Modif_" + GetRevLetter(ii),catMiddleCenter,2.5
+  '   CreateTextAF "_"             ,GetOH() + .5*Col(6)         ,iY,"TitleBlock_Text_MDate_" + GetRevLetter(ii),catMiddleCenter,2.
+  ' Next
 
   CATLinks
 End Sub
@@ -917,7 +922,8 @@ Sub CATLinks()
   Next
   
   If ProductDrawn <> Nothing Then
-    Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity").Text = ProductDrawn.PartNumber
+    Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity").Text = ProductDrawn.PartNumber + ProductDrawn.Revision
+    Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity_1").Text = ProductDrawn.PartNumber + ProductDrawn.Revision
     Texts.GetItem("TitleBlock_Text_Title_1").Text  = ProductDrawn.Definition
     Dim ProductAnalysis As Analyze
     Set ProductAnalysis = ProductDrawn.Analyze
@@ -948,7 +954,7 @@ Sub CATLinks()
     For Each itSheet In Sheets
       If Not itSheet.IsDetail Then
         curSheet = curSheet + 1        
-        itSheet.Views.Item(2).Texts.GetItem("TitleBlock_Text_Sheet_1").Text = CStr(curSheet) & "/" & CStr(nbSheet)
+        itSheet.Views.Item(2).Texts.GetItem("TitleBlock_Text_Sheet_1").Text = CStr(curSheet) & "         " & CStr(nbSheet)
       End If
     Next
   End If    
