@@ -48,21 +48,23 @@ Function GetDisplayFormat() as String
   GetDisplayFormat = Array("Letter","Legal","A0","A1","A2","A3","A4","A","B","C","D","E","F","User")( Sheet.PaperSize )
 End Function
 
-Function GetOffset() as Double  
+Function GetOffset(idx As Integer ) as Variant  
   If Sheet.PaperSize  = CatPaperA0 Or Sheet.PaperSize  = CatPaperA1 Or ( Sheet.PaperSize  = CatPaperUser And (GetWidth() > 594. Or GetHeight() > 594.)) Then
-    GetOffset = 20.
+    GetOffset=Array(10, 25)(idx-0)
   Else
-    GetOffset = 10.
+    GetOffset=Array(5, 25)(idx-0)
   End If
 End Function
 
+' 获取图纸宽度
 Function GetWidth() as Double
   Select Case TypeName(Sheet)
     Case "DrawingSheet" : GetWidth=Sheet.GetPaperWidth
     Case "Layout2DSheet": GetWidth=Sheet.PaperWidth  
   End Select
 End Function
-  
+ 
+' 获取图纸高度
 Function GetHeight() as Double
   Select Case TypeName(Sheet)
     Case "DrawingSheet" : GetHeight=Sheet.GetPaperHeight
@@ -70,12 +72,14 @@ Function GetHeight() as Double
   End Select
 End Function
   
+' 获取图框原点X（右下角）
 Function GetOH() as Double
-  GetOH = GetWidth() - GetOffset()
+  GetOH = GetWidth() - GetOffset(0)
 End Function
 
+' 获取图框原点Y（右下角）
 Function GetOV() as Double
-  GetOV = GetOffset()
+  GetOV = GetOffset(0)
 End Function
 
 Function GetColRev(index As Integer)
@@ -320,8 +324,10 @@ End Sub
 Sub CATCreateReference()
   '-------------------------------------------------------------------------------
   'How to create a reference text
+  ' 在图纸的右下角创建一个参照文字，标记创建的属性以帮助宏识别
   '-------------------------------------------------------------------------------
-  Set Text = Texts.Add("", GetWidth() - GetOffset(), GetOffset())
+  Set Text = Texts.Add("Reference_", GetWidth() - 25, 5)
+  ' Set Text = Texts.Add("", GetWidth() - GetOffset(1), GetOffset(1))
   Text.Name = "Reference_" + GetMacroID
 End Sub
 
@@ -382,7 +388,7 @@ Sub CATFrame()
   Dim Nb_CM_V As Integer 'Number/2 of vertical centring marks
   Dim Ruler   As Integer 'Ruler length (in cm)
 
-  CATFrameStandard     Nb_CM_H, Nb_CM_V, Ruler, Cst_1, Cst_2
+  ' CATFrameStandard     Nb_CM_H, Nb_CM_V, Ruler, Cst_1, Cst_2  ' 不计算图框分区标记和标尺数据
   CATFrameBorder
   ' CATFrameCentringMark Nb_CM_H, Nb_CM_V, Ruler, Cst_1, Cst_2  ' 关闭 Centring Marks
   ' CATFrameText         Nb_CM_H, Nb_CM_V, Ruler, Cst_1, Cst_2  ' 关闭 Frame Text
@@ -416,12 +422,13 @@ End Sub
 Sub CATFrameBorder()
   '-------------------------------------------------------------------------------
   'How to draw the frame border
+  ' 左偏移25，其他3边5或者10
   '-------------------------------------------------------------------------------
   On Error Resume Next
-    CreateLine GetOV(),  GetOV()                  ,  GetOH(),  GetOV()                  , "Frame_Border_Bottom"
-    CreateLine GetOH(),  GetOV()                  ,  GetOH(),  GetHeight() - GetOffset(), "Frame_Border_Left"
-    CreateLine GetOH(),  GetHeight() - GetOffset(),  GetOV(),  GetHeight() - GetOffset(), "Frame_Border_Top"
-    CreateLine GetOV(),  GetHeight() - GetOffset(),  GetOV(),  GetOV()                  , "Frame_Border_Right"
+    CreateLine GetOH(),  GetOV()                ,  GetOffset(1),  GetOV()                  , "Frame_Border_Bottom"
+    CreateLine GetOffset(1),  GetOffset(0)                  ,  GetOffset(1),  GetHeight() - GetOffset(0), "Frame_Border_Left"
+    CreateLine GetOH(),  GetHeight() - GetOffset(0),  GetOffset(1),  GetHeight() - GetOffset(0), "Frame_Border_Top"
+    CreateLine GetOH(),  GetHeight() - GetOffset(0),  GetOH(),  GetOV()                  , "Frame_Border_Right"
     If Err.Number <> 0 Then Err.Clear
   On Error Goto 0
 End Sub
@@ -528,8 +535,7 @@ Sub CATCreateTitleBlockFrame()
   '-------------------------------------------------------------------------------
   'How to draw the title block geometry
   '-------------------------------------------------------------------------------
-    CreateLine 0 + Col(1),  0         ,  100         ,  100         , "TitleBlock_Line_Bottom"
-    ' CreateLine GetOH() + Col(1),  GetOV()         ,  GetOH()         ,  GetOV()         , "TitleBlock_Line_Bottom"
+    CreateLine GetOH() + Col(1),  GetOV()         ,  GetOH()         ,  GetOV()         , "TitleBlock_Line_Bottom"
     ' CreateLine iX1 = 
     CreateLine GetOH() + Col(1),  GetOV()         ,  GetOH() + Col(1),  GetOV() + Row(5), "TitleBlock_Line_Left"
     CreateLine GetOH() + Col(1),  GetOV() + Row(5),  GetOH()         ,  GetOV() + Row(5), "TitleBlock_Line_Top"
