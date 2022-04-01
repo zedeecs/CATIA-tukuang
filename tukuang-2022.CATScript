@@ -918,6 +918,7 @@ Sub CATLinks()
   End Select
   
   'Find the product document
+
   Dim ProductDrawn
   Set ProductDrawn=Nothing
   For i = 1 to 8    
@@ -936,13 +937,18 @@ Sub CATLinks()
     Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity").Text = ProductDrawn.PartNumber + ProductDrawn.Revision
     Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity_1").Text = ProductDrawn.PartNumber + ProductDrawn.Revision
     ' Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity_1").SetFontSize =12
-    Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity_1").Mirror = catTextHorizontalFlip
+    Texts.GetItem("TitleBlock_Text_EnoviaV5_Effectivity_1").Text.Mirror = catTextHorizontalFlip
     Texts.GetItem("TitleBlock_Text_Name_1").Text = ProductDrawn.Definition
-    Texts.GetItem("TitleBlock_Text_Material_1").Text = ProductDrawn.Material
     ' Texts.GetItem("TitleBlock_Text_Title_1").Text  = ProductDrawn.Definition
     Dim ProductAnalysis As Analyze
     Set ProductAnalysis = ProductDrawn.Analyze
     Texts.GetItem("TitleBlock_Text_Weight_1").Text = FormatNumber(ProductAnalysis.Mass,2)
+
+    ' 从 Parameters 获取材质信息，不是最优办法，好在能用，也适用于其他用户自定义参数 
+    Dim userMaterial As String
+    userMaterial = ProductDrawn.Parameters.Item("材料").ValueAsString
+    Texts.GetItem("TitleBlock_Text_Material_1").Text = userMaterial
+
   End If
 
   '-------------------------------------------------------------------------------
