@@ -173,3 +173,88 @@ Private Sub UserForm_Activate()
         Me.ComboBox1.List = dic.Keys
 
 End Sub
+
+' dir 的用法 通过判断对应路径的文件，不存在返回空，存在会返回 文件名.后缀
+Sub dir_1()
+    Dim i As Integer
+
+    For i = 1 to 5
+        If Dir("D:\data\" & Range("A"& i) & ".xls*") = "" Then
+            Range("B"& i) = "无此文件"
+        Else
+            Range("B"& i) = "有文件"
+        Next
+End Sub
+
+' dir 用法2，对于有多个相同文件名，类似后缀的文件
+' 如：苏州.xls, 苏州.xlsx 两个文件
+Sub dir_2()
+    Range("A1")=Dir("D:\data\苏州.xls*") ' 这里返回 苏州.xls
+    Range("A2")=Dir                      ' 这里返回 苏州.xlsx
+    Range("A3")=Dir                      ' 这里返回空
+    Range("A4")=Dir                      ' 这里程序报错
+End Sub
+
+
+Sub wjhb()
+    Dim str As string
+    Dim wb As Workbook
+
+    str = Dir("D:\data\*.xls*") ' 返回文件名
+
+    for i = 1 To 100
+        Set wb = Workbooks.Open("D:\data\" & str)
+
+        wb.Sheets(1).Copy after := ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count)
+        ThisWorkbook.Sheets(ThisWorkbook.Sheets.Count).Name = Split(wb.Name, ".")(0)
+    
+        wb.Close
+        str = Dir
+        If str = "" Then
+            Exit For
+        End if
+    Next
+End Sub
+
+
+' 获取目标文件夹内的所有指定类型文件，并填写到表1的A1单元格内
+Sub test()
+    Dim fileName As String
+    
+    fileName = Dir("Z:\tt\*.jp*g")
+    
+    For i = 1 To 50
+        Sheets(1).Range("A" & i) = Split(fileName, ".")(0)
+        fileName = Dir
+        If fileName = "" Then
+            Exit For
+        End If
+    Next
+    
+End Sub
+    
+' 使用查找功能 效率高
+Sub findFunc()
+    ' 在D:D区域查找 L3 单元格里的内容，并将找到单元格的下偏0行，右边第3个单元格
+    ' 的值返回给M3单元格
+    Range("m3") = Range("d:d").Find(Range("L3").value).Offset(0, 3)
+    
+    ' 将找到的值清空
+    Range("d:d").Find(Range("L3").value).Offset(0, 3).ClearContents
+
+End Sub
+
+' find 标准用法
+Sub findFuncSTD()
+    dim rng As Range
+
+    set rng = Range("d:d").Find(Range("L3"))
+    ' 由于rng已经定义成对象，所以这里要用set语句将值赋予对象
+    ' 并且赋值语句在为空时，系统不会报错
+
+        ' 通过判断，在找到时，返回值到对应M3单元格
+        If not rng Is Noting Then
+            Range("M3") = rng.Offset(0, 3)
+        End If
+    
+End Sub
